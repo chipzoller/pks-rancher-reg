@@ -1,0 +1,68 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pks-rancher-reg
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: pks-rancher-reg
+subjects:
+  - kind: ServiceAccount
+    name: pks-rancher-reg
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pks-rancher-reg
+type: Opaque
+data:
+  rancherserver: <base64_data>
+  rancherbearer: <base64_data>
+  rancherca: <base64_data_see_readme>
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pks-rancher-reg
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: pks-rancher-reg
+        image: chipzoller/pks-rancher-reg:1.0
+        command: ["/pks-rancher-reg.sh"]
+        env:
+        - name: RANCHER_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: pks-rancher-reg
+              key: rancherserver
+        - name: RANCHER_BEARER
+          valueFrom:
+            secretKeyRef:
+              name: pks-rancher-reg
+              key: rancherbearer
+        - name: CURL_CA_BUNDLE
+          value: /tmp/rancherca
+        volumeMounts:
+          - name: rancherca
+            mountPath: /tmp/
+            readOnly: true
+      volumes:
+        - name: rancherca
+          secret:
+            secretName: pks-rancher-reg
+      containers:
+        - name: pks-ranger-reg-cleanup
+          image: chipzoller/pks-rancher-reg:1.0
+          command: ["/kubectl", "delete", "secrets/pks-rancher-reg"]
+      restartPolicy: Never
+      serviceAccountName: pks-rancher-reg
