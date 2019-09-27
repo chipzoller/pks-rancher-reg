@@ -3,7 +3,7 @@ Automatic registration of VMware Enterprise PKS Kubernetes clusters with Rancher
 
 ## What Is This?
 
-This is a shell script designed to be wrapped in a pod and deployed through Kubernetes which registers the cluster on which it runs with an external Rancher Server installation.
+This is a shell script designed to be wrapped in a pod and deployed through Kubernetes which registers the cluster on which it runs with an external Rancher Server installation. It can be built using the code in this repo, or pulled pre-built from [Docker Hub](https://hub.docker.com/r/chipzoller/pks-rancher-reg).
 
 ## How Does It Work?
 
