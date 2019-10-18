@@ -37,7 +37,7 @@ spec:
     spec:
       initContainers:
       - name: pks-rancher-reg
-        image: chipzoller/pks-rancher-reg:1.0
+        image: chipzoller/pks-rancher-reg:latest
         command: ["/pks-rancher-reg.sh"]
         env:
         - name: RANCHER_SERVER
@@ -62,7 +62,7 @@ spec:
             secretName: pks-rancher-reg
       containers:
         - name: pks-ranger-reg-cleanup
-          image: chipzoller/pks-rancher-reg:1.0
+          image: chipzoller/pks-rancher-reg:latest
           command: ["/kubectl", "delete", "secrets/pks-rancher-reg"]
       restartPolicy: Never
       serviceAccountName: pks-rancher-reg
