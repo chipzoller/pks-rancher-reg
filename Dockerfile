@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.12.1
 RUN addgroup -g 1001 -S appuser && adduser -u 1001 -S appuser -G appuser
 ADD pks-rancher-reg.sh /
 RUN set -x apk update && apk add --no-cache curl ca-certificates jq
